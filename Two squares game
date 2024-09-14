@@ -1,0 +1,81 @@
+
+"""
+    // Program:  This game is played on a board of 4 x 4 squares. Two players take turns;
+            each of them takes turn to place a rectangle (that covers two squares) on the board, covering
+            any 2 squares. Only one rectangle can be on a square. A square cannot be covered twice. The
+            last player who can place a card on the board is the winner.
+    // Author: Yassin Ahmed Ali
+    // ID: 20230465
+    // Version: 4.0.0
+    // Date: 3/1/2024
+"""
+
+
+import numpy as np
+# setting the dimensions of the game which is 4 * 4
+board = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]], dtype=str)
+# the possibility of the right values
+valid_values = np.array([[1, 2], [2, 3], [3, 4], [5, 6], [6, 7], [7, 8], [9, 10], [10, 11],[11, 12], [13, 14],
+                 [14, 15], [15, 16], [1, 5], [2, 6], [3, 7], [4, 8],[5, 9], [6, 10], [7, 11], [8, 12], [9, 13],
+                 [10, 14], [11, 15], [12, 16]], dtype=str)
+
+# display board
+def display_board():
+    print(board)
+# valid squares
+def is_valid(a,b):
+    for i in range(len(valid_values)):
+        # checking the validity of making rectangle
+        if (a == valid_values[i][0] or a == valid_values[i][1]) and (b == valid_values[i][0] or b == valid_values[i][1]):
+            # here we replace the value of a and b with X
+            valid_values[np.where(valid_values == a)] = 'X'
+            valid_values[np.where(valid_values == b)] = 'X'
+            return True
+    return False
+# updating board
+def update_board(a,b):
+    board[np.where(board == a)] = 'X'
+    board[np.where(board == b)] = 'X'
+    display_board()
+
+def no_rectangles_left():
+    for i in range(len(valid_values)):
+        if valid_values[i][0] != 'X' and valid_values[i][1] != 'X':
+            return False
+    return True
+# player one turn
+def player1_turn():
+    # taking the moves from player one
+    a = input(f"{player1} Enter your first move: ")
+    b = input(f"{player1} Enter your second move: ")
+    if is_valid(a, b):
+        update_board(a, b)
+    else:
+        print(f"{player1} Please insert a valid move")
+        player1_turn()
+# player 2 turn
+def player2_turn():
+    # taking the moves from player two
+    a = input(f"{player2} Enter your first move: ")
+    b = input(f"{player2} Enter your second move: ")
+    if is_valid(a, b):
+        update_board(a,b)
+    else:
+        print(f"{player2} Please insert a valid move: ")
+        player2_turn()
+
+
+# Menu of the game
+print('Welcome to Two squares game')
+player1 = input("Player 1 enter your name: ")
+player2 = input("player 2 enter your name: ")
+display_board()
+while True:
+    player1_turn()
+    if no_rectangles_left():
+        print(f"{player1} wins!")
+        break
+    player2_turn()
+    if no_rectangles_left():
+        print(f"{player2} wins!")
+        break
